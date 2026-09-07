@@ -5,9 +5,9 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 
-# Page configuration
+# Set page configuration
 st.set_page_config(
-    page_title="EduPredict | Academic Classifier",
+    page_title="EduPredict Pro | Student Performance AI",
     page_icon="🎓",
     layout="wide",
     initial_sidebar_state="collapsed",
@@ -17,144 +17,194 @@ st.set_page_config(
 st.markdown(
     """
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
     
     * {
         font-family: 'Plus Jakarta Sans', sans-serif;
     }
 
-    .hero-container {
-        background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4338ca 100%);
-        padding: 3rem 2rem;
+    /* Gradient Hero Header */
+    .hero-banner {
+        background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+        border: 1px solid rgba(99, 102, 241, 0.2);
+        padding: 2.2rem 2rem;
         border-radius: 20px;
         text-align: center;
         color: white;
         margin-bottom: 2rem;
-        box-shadow: 0 10px 25px -5px rgba(67, 56, 202, 0.3);
+        box-shadow: 0 12px 30px -10px rgba(49, 46, 129, 0.45);
     }
-    
     .hero-title {
-        font-size: 2.6rem;
+        font-size: 2.4rem;
         font-weight: 800;
         letter-spacing: -0.02em;
-        margin-bottom: 0.5rem;
+        background: linear-gradient(90deg, #ffffff, #c7d2fe);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 0.35rem;
     }
-    
-    .hero-subtitle {
-        font-size: 1.1rem;
-        color: #c7d2fe;
-        max-width: 600px;
+    .hero-desc {
+        color: #94a3b8;
+        font-size: 1rem;
+        max-width: 650px;
         margin: 0 auto;
     }
 
-    .card {
-        background: #111827;
+    /* Glassmorphism Cards for Subject Sliders */
+    .subject-card {
+        background: rgba(17, 24, 39, 0.7);
         border: 1px solid #1f2937;
-        border-radius: 16px;
-        padding: 1.5rem;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        border-radius: 14px;
+        padding: 1.1rem 1.25rem;
+        margin-bottom: 0.85rem;
+        transition: all 0.2s ease-in-out;
+    }
+    .subject-card:hover {
+        border-color: #6366f1;
+        box-shadow: 0 4px 20px rgba(99, 102, 241, 0.12);
+        transform: translateY(-2px);
+    }
+    .subject-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+    }
+    .subject-name {
+        font-weight: 700;
+        font-size: 1.05rem;
+        color: #f1f5f9;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .score-badge {
+        background: #1e1b4b;
+        color: #a5b4fc;
+        padding: 0.2rem 0.65rem;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        border: 1px solid rgba(99, 102, 241, 0.3);
     }
 
-    .stat-badge {
-        display: inline-block;
-        padding: 0.25rem 0.75rem;
-        border-radius: 9999px;
-        font-size: 0.85rem;
-        font-weight: 600;
+    /* Modern Slider Track Styling */
+    div[data-baseweb="slider"] {
+        margin-top: 0.2rem;
+    }
+    div[data-baseweb="slider"] > div > div {
+        background-color: #6366f1 !important;
     }
 
-    .pass-card {
-        background: linear-gradient(135deg, rgba(6, 78, 59, 0.9), rgba(6, 95, 70, 0.9));
-        border: 1px solid #059669;
-        border-radius: 16px;
-        padding: 2rem;
+    /* Result Outcome Cards */
+    .status-pass {
+        background: linear-gradient(135deg, rgba(6, 78, 59, 0.95), rgba(6, 95, 70, 0.95));
+        border: 2px solid #10b981;
+        border-radius: 18px;
+        padding: 2.2rem 1.5rem;
         text-align: center;
         color: #ecfdf5;
-        animation: fadeIn 0.5s ease-in;
+        box-shadow: 0 10px 30px rgba(16, 185, 129, 0.25);
+        animation: pulseEffect 0.6s ease-out;
     }
-
-    .fail-card {
-        background: linear-gradient(135deg, rgba(127, 29, 29, 0.9), rgba(153, 27, 27, 0.9));
-        border: 1px solid #dc2626;
-        border-radius: 16px;
-        padding: 2rem;
+    .status-fail {
+        background: linear-gradient(135deg, rgba(127, 29, 29, 0.95), rgba(153, 27, 27, 0.95));
+        border: 2px solid #ef4444;
+        border-radius: 18px;
+        padding: 2.2rem 1.5rem;
         text-align: center;
         color: #fef2f2;
-        animation: fadeIn 0.5s ease-in;
+        box-shadow: 0 10px 30px rgba(239, 68, 68, 0.25);
+        animation: pulseEffect 0.6s ease-out;
     }
-
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(8px); }
-        to { opacity: 1; transform: translateY(0); }
+    @keyframes pulseEffect {
+        0% { transform: scale(0.96); opacity: 0; }
+        100% { transform: scale(1); opacity: 1; }
     }
     </style>
     """,
     unsafe_allow_html=True,
 )
 
-# Load the trained model
+# Cached Model Loading
 @st.cache_resource
-def load_model(path: str = "model.pkl"):
+def load_classifier(path: str = "model.pkl"):
     if not os.path.exists(path):
         st.error(f"Error: `{path}` was not found in the root directory.")
         st.stop()
     with open(path, "rb") as f:
         return pickle.load(f)
 
-model = load_model()
+model = load_classifier()
 
-# Hero Header
+# Top Hero Header
 st.markdown(
     """
-    <div class="hero-container">
-        <div class="hero-title">🎓 Academic Success Evaluator</div>
-        <div class="hero-subtitle">
-            Enter individual subject marks to analyze performance trends and predict student qualification status instantly.
+    <div class="hero-banner">
+        <div class="hero-title">🎓 Student Academic Evaluation Portal</div>
+        <div class="hero-desc">
+            Use the interactive mark controllers below to assess performance metrics and predict the final pass/fail qualification in real time.
         </div>
     </div>
     """,
     unsafe_allow_html=True,
 )
 
-# Main Grid Layout
+# Two-Column Dashboard Layout
 col_left, col_right = st.columns([7, 5], gap="large")
 
+# Left Column: Inputs
 with col_left:
-    st.markdown("### 📝 Enter Subject Scores")
-    st.caption("Adjust the sliders corresponding to marks obtained (0 – 100)")
-    
-    sub_col1, sub_col2 = st.columns(2)
-    with sub_col1:
-        hindi = st.slider("Hindi", 0, 100, 65)
-        science = st.slider("Science", 0, 100, 70)
-        history = st.slider("History", 0, 100, 60)
-        
-    with sub_col2:
-        english = st.slider("English", 0, 100, 75)
-        maths = st.slider("Mathematics", 0, 100, 80)
-        geography = st.slider("Geography", 0, 100, 65)
+    st.markdown("### 📋 Subject Score Controls")
+    st.caption("Slide to adjust marks obtained out of 100 for each examination.")
 
+    def render_slider(icon, label, key, default):
+        score = st.slider(
+            f"{icon} {label}",
+            min_value=0,
+            max_value=100,
+            value=default,
+            key=key,
+            label_visibility="visible",
+        )
+        return score
+
+    sub_col1, sub_col2 = st.columns(2, gap="medium")
+    
+    with sub_col1:
+        hindi = render_slider("📖", "Hindi", "hindi_val", 65)
+        science = render_slider("🔬", "Science", "science_val", 72)
+        history = render_slider("🏛️", "History", "history_val", 68)
+
+    with sub_col2:
+        english = render_slider("🗣️", "English", "english_val", 75)
+        maths = render_slider("📐", "Maths", "maths_val", 80)
+        geography = render_slider("🌍", "Geography", "geog_val", 70)
+
+    # Calculate Totals
     total_score = hindi + english + science + maths + history + geography
-    percentage = (total_score / 600) * 100
+    percentage = (total_score / 600.0) * 100.0
 
     st.write("")
-    predict_clicked = st.button("Evaluate Result 🚀", type="primary", use_container_width=True)
+    predict_btn = st.button("Evaluate Qualification 🚀", type="primary", use_container_width=True)
 
+# Right Column: Live Summary & Predictions
 with col_right:
-    st.markdown("### 📊 Scorecard Summary")
-    
-    # Live summary metrics
-    metric_col1, metric_col2 = st.columns(2)
-    with metric_col1:
-        st.metric("Total Score", f"{total_score} / 600")
-    with metric_col2:
-        st.metric("Percentage", f"{percentage:.1f}%")
+    st.markdown("### 📊 Performance Analytics")
 
+    # Metrics Overview
+    stat1, stat2 = st.columns(2)
+    with stat1:
+        st.metric("Total Score", f"{total_score} / 600")
+    with stat2:
+        st.metric("Aggregate Percentage", f"{percentage:.2f}%")
+
+    # Progress bar with dynamic coloring indication
     st.progress(min(max(total_score / 600.0, 0.0), 1.0))
     st.write("")
 
-    # Align exactly with model training column names
-    input_data = pd.DataFrame(
+    # Align input keys with exact pickle features: 'Geograpgy' keeps internal model spelling[cite: 1]
+    features = pd.DataFrame(
         [
             {
                 "Hindi": hindi,
@@ -168,20 +218,19 @@ with col_right:
         ]
     )
 
-    if predict_clicked:
-        with st.spinner("Classifying results..."):
+    if predict_btn:
+        with st.spinner("Analyzing performance with KNN..."):
             time.sleep(0.5)
-            raw_pred = model.predict(input_data)[0]
+            outcome = model.predict(features)[0]
 
-        # 1 indicates Pass, 0 indicates Fail
-        if raw_pred == 1:
+        if outcome == 1:
             st.balloons()
             st.markdown(
-                """
-                <div class="pass-card">
-                    <h1 style="margin: 0; font-size: 2.5rem;">🎉 PASS</h1>
-                    <p style="margin-top: 0.5rem; font-size: 1.05rem; opacity: 0.9;">
-                        The student meets all academic benchmark standards.
+                f"""
+                <div class="status-pass">
+                    <h1 style="margin: 0; font-size: 2.8rem; font-weight: 800;">🎉 PASS</h1>
+                    <p style="margin: 0.6rem 0 0 0; font-size: 1.1rem; opacity: 0.95;">
+                        Eligible for promotion. Scored <strong>{percentage:.1f}%</strong> overall.
                     </p>
                 </div>
                 """,
@@ -190,31 +239,27 @@ with col_right:
         else:
             st.snow()
             st.markdown(
-                """
-                <div class="fail-card">
-                    <h1 style="margin: 0; font-size: 2.5rem;">⚠️ FAIL</h1>
-                    <p style="margin-top: 0.5rem; font-size: 1.05rem; opacity: 0.9;">
-                        The student falls below the passing qualification threshold.
+                f"""
+                <div class="status-fail">
+                    <h1 style="margin: 0; font-size: 2.8rem; font-weight: 800;">⚠️ FAIL</h1>
+                    <p style="margin: 0.6rem 0 0 0; font-size: 1.1rem; opacity: 0.95;">
+                        Does not meet qualification criteria. Scored <strong>{percentage:.1f}%</strong> overall.
                     </p>
                 </div>
                 """,
                 unsafe_allow_html=True,
             )
 
-        # Show confidence breakdown if available
+        # Model Probability Breakdown
         if hasattr(model, "predict_proba"):
-            probs = model.predict_proba(input_data)[0]
+            probs = model.predict_proba(features)[0]
             st.write("")
-            st.write("**Model Confidence:**")
-            
-            # Map probabilities: 0 -> Fail, 1 -> Pass
-            fail_prob = probs[0] if len(probs) > 0 else 0.0
-            pass_prob = probs[1] if len(probs) > 1 else 0.0
+            st.write("**Model Probability Spread:**")
             
             prob_df = pd.DataFrame(
-                {"Probability": [fail_prob, pass_prob]},
+                {"Confidence": [probs[0], probs[1]]},
                 index=["Fail", "Pass"]
             )
-            st.bar_chart(prob_df, y="Probability")
+            st.bar_chart(prob_df, y="Confidence")
     else:
-        st.info("👈 Set the subject marks and click **Evaluate Result** to trigger evaluation.")
+        st.info("💡 Adjust any slider on the left and click **Evaluate Qualification** to view pass/fail predictions.")
